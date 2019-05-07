@@ -1,0 +1,186 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Metadata:
+  License: Apache-2.0
+Description: 'devops platform'
+Parameters:
+  SshKey:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the web server
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: 'MS-Key'
+
+  JenkinsInstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium, t2.large, t2.xlarge, t2.2xlarge,
+      t3.nano, t3.micro, t3.small, t3.medium, t3.large, t3.xlarge, t3.2xlarge,
+      m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge,
+      m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge,
+      c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge,
+      g3.8xlarge,
+      r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r3.12xlarge,
+      i3.xlarge, i3.2xlarge, i3.4xlarge, i3.8xlarge,
+      d2.xlarge, d2.2xlarge, d2.4xlarge, d2.8xlarge]
+    ConstraintDescription: must be a valid EC2 instance type.
+
+  AwxInstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.medium
+    AllowedValues: [t2.nano, t2.micro, t2.small, t2.medium, t2.large, t2.xlarge, t2.2xlarge,
+      t3.nano, t3.micro, t3.small, t3.medium, t3.large, t3.xlarge, t3.2xlarge,
+      m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge,
+      m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge,
+      c5.large, c5.xlarge, c5.2xlarge, c5.4xlarge, c5.9xlarge,
+      g3.8xlarge,
+      r5.large, r5.xlarge, r5.2xlarge, r5.4xlarge, r3.12xlarge,
+      i3.xlarge, i3.2xlarge, i3.4xlarge, i3.8xlarge,
+      d2.xlarge, d2.2xlarge, d2.4xlarge, d2.8xlarge]
+    ConstraintDescription: must be a valid EC2 instance type.
+
+  CentosAmiId:
+    Type:  'AWS::EC2::Image::Id'
+    Default: 'ami-0ff760d16d9497662'
+  EC2SecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: 'sg-003f9b42bb3d8417f'
+  PubSubnet:
+    Type: 'AWS::EC2::Subnet::Id'
+    Default: 'subnet-016abf1c4d81cd91b'
+
+Resources:
+  Jenkins:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'JenkinsInstanceType'
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform
+           sh jenkins.sh
+      Tags:
+       -
+        Key: "SubjectId"
+        Value: "Msaidi-Lab"
+       -
+        Key: "Project"
+        Value: "DevOps-Lab"
+       -
+        Key: "Owner"
+        Value: "msaidi"
+       -
+        Key: "Environment"
+        Value: "TST"
+       -
+        Key: "Cost"
+        Value: "CIE"
+       -
+        Key: "Name"
+        Value: "Jenkins"
+
+  Awx:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'AwxInstanceType'
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform
+           sh awx.sh
+      Tags:
+       -
+        Key: "SubjectId"
+        Value: "Msaidi-Lab"
+       -
+        Key: "Project"
+        Value: "DevOps-Lab"
+       -
+        Key: "Owner"
+        Value: "msaidi"
+       -
+        Key: "Environment"
+        Value: "TST"
+       -
+        Key: "Cost"
+        Value: "CIE"
+       -
+        Key: "Name"
+        Value: "Tower"
+
+
+  DockerSlave:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'JenkinsInstanceType'
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform
+           sh docker.sh
+      Tags:
+       -
+        Key: "SubjectId"
+        Value: "Msaidi-Lab"
+       -
+        Key: "Project"
+        Value: "DevOps-Lab"
+       -
+        Key: "Owner"
+        Value: "msaidi"
+       -
+        Key: "Environment"
+        Value: "TST"
+       -
+        Key: "Cost"
+        Value: "CIE"
+       -
+        Key: "Name"
+        Value: "DockerSlave"
