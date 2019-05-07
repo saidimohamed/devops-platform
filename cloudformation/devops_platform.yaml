@@ -72,7 +72,7 @@ Resources:
            yum install git -y
            cd /home/centos
            git clone https://github.com/saidimohamed/devops-platform.git
-           cd devops-platform
+           cd devops-platform/install_script
            sh jenkins.sh
       Tags:
        -
@@ -117,7 +117,7 @@ Resources:
            yum install git -y
            cd /home/centos
            git clone https://github.com/saidimohamed/devops-platform.git
-           cd devops-platform
+           cd devops-platform/install_script
            sh awx.sh
       Tags:
        -
@@ -163,7 +163,7 @@ Resources:
            yum install git -y
            cd /home/centos
            git clone https://github.com/saidimohamed/devops-platform.git
-           cd devops-platform
+           cd devops-platform/install_script
            sh docker.sh
       Tags:
        -
