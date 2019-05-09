@@ -74,6 +74,9 @@ Resources:
            git clone https://github.com/saidimohamed/devops-platform.git
            cd devops-platform/install_script
            sh jenkins.sh
+           cp basic-security.groovy /var/lib/jenkins/init.groovy.d/
+           chown jenkins:jenkins /var/lib/jenkins/init.groovy.d/basic-security.groovy
+           service jenkins restart           
       Tags:
        -
         Key: "SubjectId"
