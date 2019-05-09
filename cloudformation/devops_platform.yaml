@@ -77,8 +77,6 @@ Resources:
            cp basic-security.groovy /var/lib/jenkins/init.groovy.d/
            chown jenkins:jenkins /var/lib/jenkins/init.groovy.d/basic-security.groovy
            service jenkins restart     
-           sleep 5
-           service jenkins restart
       Tags:
        -
         Key: "SubjectId"
