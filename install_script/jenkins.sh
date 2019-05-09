@@ -22,4 +22,8 @@ yum install jenkins -y
 sudo systemctl start jenkins.service
 sudo systemctl enable jenkins.service
 
-sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+sudo mkdir -p /var/lib/jenkins/init.groovy.d/
+
+sudo chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d/
+
+
