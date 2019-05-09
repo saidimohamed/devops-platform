@@ -125,6 +125,7 @@ Resources:
       Tags:
        -
         Key: "SubjectId"
+        
         Value: "Msaidi-Lab"
        -
         Key: "Project"
@@ -187,3 +188,13 @@ Resources:
        -
         Key: "Name"
         Value: "DockerSlave"
+Outputs:
+  AwxPublicIP:
+    Description: Public IP address of Awx instance
+    Value: !GetAtt [Awx, PublicIp]
+  JenkinsPublicIP:
+    Description: Public IP address of Jenkins instance
+    Value: !GetAtt [Jenkins, PublicIp]
+  DockerPublicIP:
+    Description: Public IP address of Docker Slave instance
+    Value: !GetAtt [DockerSlave, PublicIp]
