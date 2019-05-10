@@ -30,8 +30,4 @@ sudo cd home/centos/devops-platform/install_script
 sudo cp basic-security.groovy /var/lib/jenkins/init.groovy.d/
 sudo chown jenkins:jenkins /var/lib/jenkins/init.groovy.d/basic-security.groovy
 
-sudo java_options=$( cat /etc/sysconfig/jenkins | grep 'JENKINS_JAVA_OPTIONS' | awk -F '"' '{print $2 }')
-sudo java_options=$(echo "JENKINS_JAVA_OPTIONS=\"$java_options  -Djenkins.install.runSetupWizard=false\"")
-sudo sed -i -e "s/^JENKINS_JAVA_OPTIONS.*/$java_options/g" /etc/sysconfig/jenkins
-
 sudo systemctl restart jenkins.service
