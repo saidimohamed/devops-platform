@@ -18,6 +18,37 @@ JENKINS_JAVA_CMD=""
 JENKINS_USER="jenkins"
 
 ## Type:        string
+## Path:        Development/Jenkins
+## Description: Jenkins Automation Server
+## Type:        string
+## Default:     "/var/lib/jenkins"
+## ServiceRestart: jenkins
+#
+# Directory where Jenkins store its configuration and working
+# files (checkouts, build reports, artifacts, ...).
+#
+JENKINS_HOME="/var/lib/jenkins"
+
+## Type:        string
+## Default:     ""
+## ServiceRestart: jenkins
+#
+# Java executable to run Jenkins
+# When left empty, we'll try to find the suitable Java.
+#
+JENKINS_JAVA_CMD=""
+
+## Type:        string
+## Default:     "jenkins"
+## ServiceRestart: jenkins
+#
+# Unix user account that runs the Jenkins daemon
+# Be careful when you change this, as you need to update
+# permissions of $JENKINS_HOME and /var/log/jenkins.
+#
+JENKINS_USER="jenkins"
+
+## Type:        string
 ## Default: "false"
 ## ServiceRestart: jenkins
 #
