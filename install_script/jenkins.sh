@@ -26,4 +26,8 @@ sudo mkdir -p /var/lib/jenkins/init.groovy.d/
 
 sudo chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d/
 
+java_options=$( cat /etc/sysconfig/jenkins | grep 'JENKINS_JAVA_OPTIONS' | awk -F '"' '{print $2 }')
+java_options=$(echo "JENKINS_JAVA_OPTIONS=\"$java_options  -Djenkins.install.runSetupWizard=false\"")
+sed -i -e "s/^JENKINS_JAVA_OPTIONS.*/$java_options/g" /etc/sysconfig/jenkins
 
+sudo systemctl restart jenkins.service
