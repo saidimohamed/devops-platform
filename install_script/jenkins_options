@@ -33,7 +33,7 @@ JENKINS_USER="jenkins"
 #
 # Options to pass to java when running Jenkins.
 #
-
+JENKINS_JAVA_OPTIONS="-Djenkins.install.runSetupWizard=false"
 
 ## Type:        integer(0:65535)
 ## Default:     8080
@@ -42,7 +42,7 @@ JENKINS_USER="jenkins"
 # Port Jenkins is listening on.
 # Set to -1 to disable
 #
-JENKINS_PORT="8080"
+JENKINS_PORT="80"
 
 ## Type:        string
 ## Default:     ""
