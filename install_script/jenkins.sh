@@ -17,7 +17,7 @@ echo $JRE_HOME
 
 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-yum install jenkins -y
+sudo yum install jenkins -y
 
 sudo systemctl start jenkins.service
 sudo systemctl enable jenkins.service
@@ -26,8 +26,12 @@ sudo mkdir -p /var/lib/jenkins/init.groovy.d/
 
 sudo chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d/
 
-java_options=$( cat /etc/sysconfig/jenkins | grep 'JENKINS_JAVA_OPTIONS' | awk -F '"' '{print $2 }')
-java_options=$(echo "JENKINS_JAVA_OPTIONS=\"$java_options  -Djenkins.install.runSetupWizard=false\"")
-sed -i -e "s/^JENKINS_JAVA_OPTIONS.*/$java_options/g" /etc/sysconfig/jenkins
+sudo cd home/centos/devops-platform/install_script
+sudo cp basic-security.groovy /var/lib/jenkins/init.groovy.d/
+sudo chown jenkins:jenkins /var/lib/jenkins/init.groovy.d/basic-security.groovy
+
+sudo java_options=$( cat /etc/sysconfig/jenkins | grep 'JENKINS_JAVA_OPTIONS' | awk -F '"' '{print $2 }')
+sudo java_options=$(echo "JENKINS_JAVA_OPTIONS=\"$java_options  -Djenkins.install.runSetupWizard=false\"")
+sudo sed -i -e "s/^JENKINS_JAVA_OPTIONS.*/$java_options/g" /etc/sysconfig/jenkins
 
 sudo systemctl restart jenkins.service
