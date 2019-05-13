@@ -28,7 +28,7 @@ mv /opt/sonarqube-7.7 /opt/sonarqube
 
 sed -i -e 's/^#sonar.jdbc.username.*/sonar.jdbc.username="sonar"/g' /opt/sonarqube/conf/sonar.properties
 sed -i -e 's/^#sonar.jdbc.password.*/sonar.jdbc.password="sonar"/g' /opt/sonarqube/conf/sonar.properties
-sed -i -e 's/^#sonar.jdbc.url.*/sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/sonar/g' /opt/sonarqube/conf/sonar.properties
+sed -i -e 's/^#sonar.jdbc.url=jdbc:postgresql://localhost/sonar.*/sonar.jdbc.url=jdbc:postgresql:\/\/localhost\/sonar/g' /opt/sonarqube/conf/sonar.properties
 
 echo '[Unit]
 Description=SonarQube service
