@@ -17,9 +17,8 @@ sudo mv  /opt/nexus-3.16.1-02/ /opt/nexus
 sudo adduser nexus
 sudo chown -R nexus:nexus /opt/nexus
 
-sudo sed -i -e 's/^#run_as_user.*/run_as_user="nexus"/g' /opt/nexus/bin/nexus.rc
-
 sudo ln -s /opt/nexus/bin/nexus /etc/init.d/nexus
 sudo systemctl enable nexus
+sudo systemctl start nexus && sudo sed -i -e 's/^#run_as_user.*/run_as_user="nexus"/g' /opt/nexus/bin/nexus.rc
 
-sudo systemctl start nexus
+sudo systemctl restart nexus
