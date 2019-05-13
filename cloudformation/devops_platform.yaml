@@ -229,7 +229,7 @@ Resources:
         Value: "CIE"
        -
         Key: "Name"
-        Value: "Tower"
+        Value: "Nexus"
 
 Outputs:
   AwxPublicIP:
