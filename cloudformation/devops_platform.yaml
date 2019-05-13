@@ -230,6 +230,51 @@ Resources:
        -
         Key: "Name"
         Value: "Nexus"
+  Sonar:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'JenkinsInstanceType'
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform/install_script
+           sh sonar.sh
+      Tags:
+       -
+        Key: "SubjectId"
+        
+        Value: "Msaidi-Lab"
+       -
+        Key: "Project"
+        Value: "DevOps-Lab"
+       -
+        Key: "Owner"
+        Value: "msaidi"
+       -
+        Key: "Environment"
+        Value: "TST"
+       -
+        Key: "Cost"
+        Value: "CIE"
+       -
+        Key: "Name"
+        Value: "Sonar"
 
 Outputs:
   AwxPublicIP:
@@ -244,4 +289,8 @@ Outputs:
   NexusPublicIP:
     Description: Public IP address of Nexus instance
     Value: !GetAtt [Nexus, PublicIp]
+  SonarPublicIP:
+    Description: Public IP address of Sonar instance
+    Value: !GetAtt [Sonar, PublicIp]
+
 
