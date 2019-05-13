@@ -17,10 +17,10 @@ sudo /usr/pgsql-9.6/bin/postgresql96-setup initdb
 sudo systemctl start postgresql-9.6
 sudo systemctl enable postgresql-9.6
 sudo echo "postgres" | passwd --stdin postgres
-su - postgres
-createuser sonar
-psql -c "ALTER USER sonar WITH ENCRYPTED password 'sonar'"
-psql -c "CREATE DATABASE sonar OWNER sonar"
+
+su - -c  "postgres createuser sonar" postgres
+su - -c "psql -c \"ALTER USER sonar WITH ENCRYPTED password 'sonar'\"" postgres
+su - -c  "psql -c \"CREATE DATABASE sonar OWNER sonar\"" postgres
 
 https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.7.zip
 unzip sonarqube-7.7.zip -d /opt
