@@ -4,7 +4,7 @@ sudo yum install epel-release -y
 
 sudo yum update -y
 
-sudo yum install firewalld java-1.8.0-openjdk.x86_64 wget -y
+sudo yum install java-1.8.0-openjdk.x86_64 wget -y
 
 
 sudo cp /etc/profile /etc/profile_backup
