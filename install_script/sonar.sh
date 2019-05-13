@@ -18,7 +18,7 @@ sudo systemctl start postgresql-9.6
 sudo systemctl enable postgresql-9.6
 sudo echo "postgres" | passwd --stdin postgres
 
-su - -c  "postgres createuser sonar" postgres
+su - -c  "createuser sonar" postgres
 su - -c "psql -c \"ALTER USER sonar WITH ENCRYPTED password 'sonar'\"" postgres
 su - -c  "psql -c \"CREATE DATABASE sonar OWNER sonar\"" postgres
 
