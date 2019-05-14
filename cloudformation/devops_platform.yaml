@@ -243,11 +243,8 @@ Outputs:
   DockerPublicIP:
     Description: Public IP address of Docker Slave instance
     Value: !GetAtt [DockerSlave, PublicIp]
-  NexusPublicIP:
-    Description: Public IP address of Nexus instance
-    Value: !GetAtt [Nexus, PublicIp]
-  SonarPublicIP:
-    Description: Public IP address of Sonar instance
+  SonarNexusPublicIP:
+    Description: Public IP address of SonarNexus instance
     Value: !GetAtt [SonarNexus, PublicIp]
 
 
