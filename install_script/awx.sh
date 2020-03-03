@@ -3,13 +3,13 @@
 sudo yum update -y
 
 sudo yum install epel-release -y
-sudo yum install git  gcc-c++ make gcc   ansible python-pip rh-python36 -y
+sudo yum install git  gcc-c++ make gcc  centos-release-scl  ansible python-pip rh-python36 -y
 
 curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
 
 sudo yum install nodejs -y
 
-pip install docker
+#pip install docker
 
 sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine -y
 
@@ -25,11 +25,14 @@ sudo systemctl enable docker
 
 sudo service docker start
 
-sudo scl enable rh-python36 bash
 
-sudo pip3 install docker-compose
 
-docker-compose version
+source /opt/rh/rh-python36/enable
+pip3 install docker-compose ansible
+pip3 install docker
+
+
+sudo docker-compose version
 
 git clone https://github.com/ansible/awx.git
 cd awx/installer
