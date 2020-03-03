@@ -32,5 +32,5 @@ sudo rm -rf /etc/sysconfig/jenkins
 sudo cp jenkins_options /etc/sysconfig/jenkins
 sudo chown jenkins:jenkins /var/lib/jenkins/init.groovy.d/basic-security.groovy
 
-
+sudo curl 127.0.0.1:8080
 sudo systemctl restart jenkins.service
