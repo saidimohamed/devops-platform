@@ -3,7 +3,7 @@
 sudo yum update -y
 
 sudo yum install epel-release -y
-sudo yum install git  gcc-c++ make gcc   ansible python-pip -y
+sudo yum install git  gcc-c++ make gcc   ansible python-pip rh-python36 -y
 
 curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
 
@@ -25,8 +25,9 @@ sudo systemctl enable docker
 
 sudo service docker start
 
-sudo pip install docker-compose
-sudo yum upgrade python*
+sudo scl enable rh-python36 bash
+
+sudo pip3 install docker-compose
 
 docker-compose version
 
