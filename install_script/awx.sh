@@ -1,35 +1,23 @@
 #!/bin/bash
-yum install epel-release -y
+yum install -y epel-release
 yum update -y
-yum install git  gcc-c++ make gcc  centos-release-scl  ansible python-pip rh-python36 -y
+yum install -y yum-utils device-mapper-persistent-data lvm2 ansible git python-devel python-pip vim-enhanced
 
-curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
+pip install cryptography
+pip install jsonschema
+pip install docker-compose~=1.23.0
+pip install docker --upgrade
 
-yum install nodejs -y
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-#pip install docker
+yum install docker-ce -y
 
-yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine -y
-
-yum install -y yum-utils device-mapper-persistent-data lvm2
-
-yum-config-manager  --add-repo  https://download.docker.com/linux/centos/docker-ce.repo -y
-
-yum install docker-ce docker-ce-cli containerd.io -y
-
-usermod -aG docker $(whoami)
+systemctl start docker
 
 systemctl enable docker
 
-service docker start
-
-
-
-source /opt/rh/rh-python36/enable
-pip3 install docker-compose ansible docker
-
-docker-compose version
-
 git clone https://github.com/ansible/awx.git
-cd awx/installer
+
+cd awx/installer/
+
 ansible-playbook -i inventory install.yml
