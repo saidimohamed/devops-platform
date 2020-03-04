@@ -1,6 +1,4 @@
 #!/bin/bash
-docker pull sonarqube
-docker pull sonatype/nexus3
 
 docker run -d --name sonarqube -p 9000:9000 sonarqube
 
