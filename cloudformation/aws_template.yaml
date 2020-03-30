@@ -1,22 +1,163 @@
-- name: Aws stack
-  hosts: localhost
-  connection: local
-  gather_facts: false
+AWSTemplateFormatVersion: '2010-09-09'
+Metadata:
+  License: Apache-2.0
+Description: 'aws template'
+Parameters:
+  SshKey:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the web server
+    Type: AWS::EC2::KeyPair::KeyName
 
-  tasks:
-  - name: create a cloudformation stack
-    cloudformation:
-      stack_name: "ansible-cloudformation"
-      state: "present"
-      region: "eu-west-1"
-      disable_rollback: true
-      template: "aws_template.yml"
-      template_parameters:
-        SshKey: "Devops-key"
-        EC2SecurityGroupId: "sg-003f9b42bb3d8417f"
-        PubSubnet: "subnet-016abf1c4d81cd91b"
-      tags:
-        Stack: "ansible-cloudformation"
-    register: outputs
-  - name: show stack outputs (raw ansible vpc facts)
-    debug: msg="IP Addresses  are {{ outputs.stack_outputs }}"
+  JenkinsInstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+
+  AwxInstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.medium
+
+  CentosAmiId:
+    Type:  'AWS::EC2::Image::Id'
+    Default: 'ami-0ff760d16d9497662'
+
+  EC2SecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+
+  PubSubnet:
+    Type: 'AWS::EC2::Subnet::Id'
+
+Resources:
+  Jenkins:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'JenkinsInstanceType'
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform/install_script
+           sh jenkins.sh
+      Tags:
+       -
+        Key: "name"
+        Value: "jenkins"
+  Awx:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref 'AwxInstanceType'
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform/install_script
+           sh awx.sh
+      Tags:
+       -
+        Key: "name"
+        Value: "awx"
+
+  Sonar:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.medium
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform/install_script
+           sh docker.sh
+           sh sonar.sh
+      Tags:
+       -
+        Key: "name"
+        Value: "sonar"
+
+  Nexus:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.medium
+      KeyName: !Ref 'SshKey'
+      ImageId: !Ref 'CentosAmiId'
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: True
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: [!Ref 'EC2SecurityGroupId']
+          SubnetId: !Ref 'PubSubnet'
+
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash
+           yum install epel-release -y
+           yum install git -y
+           cd /home/centos
+           git clone https://github.com/saidimohamed/devops-platform.git
+           cd devops-platform/install_script
+           sh docker.sh
+           sh nexus.sh
+      Tags:
+       -
+        Key: "name"
+        Value: "nexus"
+Outputs:
+  AwxPublicIP:
+    Description: Public IP address of Awx instance
+    Value: !GetAtt [Awx, PublicIp]
+  JenkinsPublicIP:
+    Description: Public IP address of Jenkins instance
+    Value: !GetAtt [Jenkins, PublicIp]
+  SonarPublicIP:
+    Description: Public IP address of Sonar instance
+    Value: !GetAtt [Sonar, PublicIp]
+  NexusPublicIP:
+    Description: Public IP address of Nexus instance
+    Value: !GetAtt [Nexus, PublicIp]
