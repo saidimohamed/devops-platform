@@ -1,0 +1,22 @@
+- name: provision stack
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: create a cloudformation stack
+    cloudformation:
+      stack_name: "ansible-cloudformation"
+      state: "present"
+      region: "eu-west-1"
+      disable_rollback: true
+      template: "aws_template.yml"
+      template_parameters:
+        SshKey: "Devops-key"
+        EC2SecurityGroupId: "sg-003f9b42bb3d8417f"
+        PubSubnet: "subnet-016abf1c4d81cd91b"
+      tags:
+        Stack: "ansible-cloudformation"
+    register: outputs
+  - name: show stack outputs (raw ansible vpc facts)
+    debug: msg="IP Addresses  are {{ outputs.stack_outputs }}"
