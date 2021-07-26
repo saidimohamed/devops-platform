@@ -27,6 +27,7 @@ sudo mkdir -p /var/lib/jenkins/init.groovy.d/
 sudo chown -R jenkins:jenkins /var/lib/jenkins/init.groovy.d/
 
 sudo cd home/centos/devops-platform/install_script
+sudo git checkout tags/17.1.0
 sudo cp basic-security.groovy /var/lib/jenkins/init.groovy.d/
 sudo rm -rf /etc/sysconfig/jenkins
 sudo cp jenkins_options /etc/sysconfig/jenkins
